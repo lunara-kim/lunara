@@ -17,6 +17,8 @@ from agentcrew.agents.agent4 import QAVerificationAgent
 from agentcrew.prm.context_injector import ContextInjector
 from agentcrew.prm.failure_handler import FailureHandler, PipelineAbortError
 from agentcrew.prm.progress_monitor import ProgressMonitor
+from agentcrew.notification.dispatcher import NotificationDispatcher
+from agentcrew.schemas.config import NotificationConfig
 from agentcrew.schemas.progress import PipelineStatus
 
 logger = logging.getLogger(__name__)
@@ -74,12 +76,16 @@ class PRMOrchestrator:
         self,
         models: AgentModels,
         config: Optional[PipelineConfig] = None,
+        notification_config: Optional[NotificationConfig] = None,
     ) -> None:
         self.models = models
         self.config = config or PipelineConfig()
         self.monitor = ProgressMonitor(self.config.progress_path)
         self.failure_handler = FailureHandler(log_dir=self.config.log_dir)
         self.context_injector = ContextInjector(self.config.project_root)
+        self.dispatcher = NotificationDispatcher(
+            notification_config or NotificationConfig()
+        )
 
         # Agent 인스턴스 생성
         self._agent1 = RequirementsAgent(llm=models.agent1_llm)
@@ -145,12 +151,13 @@ class PRMOrchestrator:
             self.monitor.mark_success()
             self.failure_handler.add_log("pipeline", "INFO", "파이프라인 완료")
             self.failure_handler.save_logs(suffix="_success")
+            await self.dispatcher.notify_success()
 
         except PipelineAbortError:
             raise
         except Exception as e:
             agent_name = self.monitor.load().current_agent or "unknown"
-            self._handle_failure(agent_name, str(e))
+            await self._handle_failure(agent_name, str(e))
 
         return results
 
@@ -171,7 +178,7 @@ class PRMOrchestrator:
             self.failure_handler.add_log(agent_name, "INFO", "요구사항 구체화 완료")
             return {"doc": doc, "requirements_md": md}
         except Exception as e:
-            self._handle_failure(agent_name, str(e))
+            await self._handle_failure(agent_name, str(e))
             raise  # unreachable, _handle_failure raises
 
     async def _run_agent2(self, requirements_md: str) -> dict[str, Any]:
@@ -186,7 +193,7 @@ class PRMOrchestrator:
             self.failure_handler.add_log(agent_name, "INFO", "작업 목록 생성 완료")
             return {"tasks_file": tasks_file, "tasks_yaml": yaml_str}
         except Exception as e:
-            self._handle_failure(agent_name, str(e))
+            await self._handle_failure(agent_name, str(e))
             raise
 
     async def _run_agent3(self) -> dict[str, Any]:
@@ -210,7 +217,7 @@ class PRMOrchestrator:
             self.failure_handler.add_log(agent_name, "INFO", "코드 구현 완료")
             return {"result": result}
         except Exception as e:
-            self._handle_failure(agent_name, str(e))
+            await self._handle_failure(agent_name, str(e))
             raise
 
     async def _run_agent4(self) -> dict[str, Any]:
@@ -231,14 +238,15 @@ class PRMOrchestrator:
             self.failure_handler.add_log(agent_name, "INFO", "QA 검증 완료")
             return {"result": result}
         except Exception as e:
-            self._handle_failure(agent_name, str(e))
+            await self._handle_failure(agent_name, str(e))
             raise
 
-    def _handle_failure(self, agent_name: str, message: str) -> None:
+    async def _handle_failure(self, agent_name: str, message: str) -> None:
         """실패를 처리하고 PipelineAbortError를 발생시킨다."""
         self.monitor.mark_failed(agent_name, message)
         self.failure_handler.add_log(agent_name, "ERROR", message)
         log_path = self.failure_handler.save_logs(suffix="_failed")
+        await self.dispatcher.notify_failure(agent=agent_name, reason=message)
         raise PipelineAbortError(
             agent=agent_name,
             reason=message,
