@@ -51,7 +51,7 @@ def test_dummy_notifier():
     payload = NotificationPayload(
         level=NotificationLevel.INFO, title="t", message="m"
     )
-    result = asyncio.get_event_loop().run_until_complete(n.send(payload))
+    result = asyncio.run(n.send(payload))
     assert result is True
     assert len(n.sent) == 1
 
@@ -95,7 +95,7 @@ class TestDiscordNotifier:
         payload = NotificationPayload(
             level=NotificationLevel.SUCCESS, title="ok", message="done"
         )
-        result = asyncio.get_event_loop().run_until_complete(notifier.send(payload))
+        result = asyncio.run(notifier.send(payload))
         assert result is True
         mock_urlopen.assert_called_once()
 
@@ -111,7 +111,7 @@ class TestDiscordNotifier:
         payload = NotificationPayload(
             level=NotificationLevel.FAILURE, title="err", message="bad"
         )
-        result = asyncio.get_event_loop().run_until_complete(notifier.send(payload))
+        result = asyncio.run(notifier.send(payload))
         assert result is False
 
 
@@ -124,9 +124,7 @@ class TestNotificationDispatcher:
         dispatcher = NotificationDispatcher(config)
         assert dispatcher._notifier is None
 
-        result = asyncio.get_event_loop().run_until_complete(
-            dispatcher.notify_success()
-        )
+        result = asyncio.run(dispatcher.notify_success())
         assert result is False
 
     def test_enabled_without_webhook(self):
@@ -150,7 +148,7 @@ class TestNotificationDispatcher:
             webhook_url="https://discord.com/api/webhooks/test",
         )
         dispatcher = NotificationDispatcher(config)
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             dispatcher.notify_success(details={"duration": "30s"})
         )
         assert result is True
@@ -169,7 +167,7 @@ class TestNotificationDispatcher:
             webhook_url="https://discord.com/api/webhooks/test",
         )
         dispatcher = NotificationDispatcher(config)
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             dispatcher.notify_failure(agent="agent3", reason="빌드 실패")
         )
         assert result is True
