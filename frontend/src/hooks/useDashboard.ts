@@ -16,6 +16,9 @@ import {
   fetchLogs,
   fetchHistory,
   connectProgressWS,
+  triggerPipeline as apiTrigger,
+  cancelPipeline as apiCancel,
+  getPipelineStatus,
 } from '../api/client'
 
 export function useDashboard() {
@@ -25,6 +28,7 @@ export function useDashboard() {
   const [logs, setLogs] = useState<LogEntry[]>(mockLogs)
   const [history, setHistory] = useState<RunHistoryEntry[]>(mockHistory)
   const [isLive, setIsLive] = useState(false)
+  const [isPipelineRunning, setIsPipelineRunning] = useState(false)
   const wsRef = useRef<WebSocket | null>(null)
 
   useEffect(() => {
@@ -67,5 +71,29 @@ export function useDashboard() {
     }
   }, [])
 
-  return { progress, tasks, agents, logs, history, isLive }
+  // Poll pipeline status when live
+  useEffect(() => {
+    if (!isLive) return
+    const id = setInterval(async () => {
+      try {
+        const { is_running } = await getPipelineStatus()
+        setIsPipelineRunning(is_running)
+      } catch { /* ignore */ }
+    }, 3000)
+    return () => clearInterval(id)
+  }, [isLive])
+
+  async function triggerPipeline(inputText: string) {
+    const res = await apiTrigger(inputText)
+    if (res.status === 'started') setIsPipelineRunning(true)
+    return res
+  }
+
+  async function cancelPipeline() {
+    const res = await apiCancel()
+    if (res.status === 'cancelled') setIsPipelineRunning(false)
+    return res
+  }
+
+  return { progress, tasks, agents, logs, history, isLive, isPipelineRunning, triggerPipeline, cancelPipeline }
 }

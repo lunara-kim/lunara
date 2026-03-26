@@ -43,6 +43,26 @@ export async function fetchHistory(): Promise<RunHistoryEntry[]> {
   return fetchJSON('/api/history')
 }
 
+export async function triggerPipeline(inputText: string): Promise<{status: string, message: string}> {
+  const res = await fetch(`${API_BASE}/api/pipeline/run`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ input_text: inputText }),
+  })
+  if (!res.ok) throw new Error(`API pipeline/run: ${res.status}`)
+  return res.json()
+}
+
+export async function cancelPipeline(): Promise<{status: string, message?: string}> {
+  const res = await fetch(`${API_BASE}/api/pipeline/cancel`, { method: 'POST' })
+  if (!res.ok) throw new Error(`API pipeline/cancel: ${res.status}`)
+  return res.json()
+}
+
+export async function getPipelineStatus(): Promise<{is_running: boolean}> {
+  return fetchJSON('/api/pipeline/status')
+}
+
 export function connectProgressWS(onUpdate: (p: Progress) => void): WebSocket {
   const ws = new WebSocket('ws://localhost:8000/ws/progress')
   ws.onmessage = (e) => {
