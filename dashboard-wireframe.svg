@@ -1,0 +1,259 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" font-family="'Segoe UI', sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f0f23"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e1e3a"/>
+      <stop offset="100%" stop-color="#16162b"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="900" fill="url(#bg)"/>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="1200" height="60" fill="#12122a" opacity="0.9"/>
+  <text x="30" y="40" fill="#e0e0ff" font-size="22" font-weight="bold">🤖 AgentCrew Dashboard</text>
+  <text x="1000" y="40" fill="#888" font-size="14">Last updated: 2m ago</text>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Section 1: Pipeline Status (Top Bar)   -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="20" y="75" width="1160" height="100" rx="12" fill="url(#card)" stroke="#2a2a4a" stroke-width="1"/>
+
+  <!-- Pipeline Status Badge -->
+  <rect x="40" y="95" width="120" height="60" rx="8" fill="#1b3a1b" stroke="#2ecc71" stroke-width="1.5"/>
+  <circle cx="65" cy="125" r="8" fill="#2ecc71" filter="url(#glow)"/>
+  <text x="80" y="130" fill="#2ecc71" font-size="16" font-weight="bold">SUCCESS</text>
+
+  <!-- Agent Pipeline Flow -->
+  <g transform="translate(200, 95)">
+    <!-- Agent 1 -->
+    <rect x="0" y="10" width="160" height="45" rx="8" fill="#1b3a1b" stroke="#2ecc71" stroke-width="1"/>
+    <text x="15" y="38" fill="#2ecc71" font-size="13" font-weight="bold">✅ Agent 1</text>
+    <text x="80" y="38" fill="#aaa" font-size="11">요구사항 구체화</text>
+    <!-- Arrow -->
+    <path d="M165 32 L185 32" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <!-- Agent 2 -->
+    <rect x="190" y="10" width="160" height="45" rx="8" fill="#1b3a1b" stroke="#2ecc71" stroke-width="1"/>
+    <text x="205" y="38" fill="#2ecc71" font-size="13" font-weight="bold">✅ Agent 2</text>
+    <text x="270" y="38" fill="#aaa" font-size="11">작업 분해</text>
+    <path d="M355 32 L375 32" stroke="#555" stroke-width="2"/>
+
+    <!-- Agent 3 (Running) -->
+    <rect x="380" y="10" width="160" height="45" rx="8" fill="#3a2a1b" stroke="#f39c12" stroke-width="1.5"/>
+    <text x="395" y="38" fill="#f39c12" font-size="13" font-weight="bold">⏳ Agent 3</text>
+    <text x="465" y="38" fill="#aaa" font-size="11">코드 구현</text>
+    <path d="M545 32 L565 32" stroke="#555" stroke-width="2"/>
+
+    <!-- Agent 4 -->
+    <rect x="570" y="10" width="160" height="45" rx="8" fill="#1e1e3a" stroke="#555" stroke-width="1"/>
+    <text x="585" y="38" fill="#888" font-size="13">⏸ Agent 4</text>
+    <text x="650" y="38" fill="#666" font-size="11">QA 검증</text>
+  </g>
+
+  <!-- Timing -->
+  <text x="960" y="115" fill="#888" font-size="12">시작: 13:02:22</text>
+  <text x="960" y="135" fill="#888" font-size="12">경과: 2분 58초</text>
+  <text x="960" y="155" fill="#888" font-size="12">LLM 호출: 16회</text>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Section 2: Tasks Table (Left)          -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="20" y="190" width="720" height="420" rx="12" fill="url(#card)" stroke="#2a2a4a" stroke-width="1"/>
+  <text x="40" y="220" fill="#e0e0ff" font-size="16" font-weight="bold">📋 Tasks</text>
+  <text x="640" y="220" fill="#888" font-size="12">6 tasks · 4 resolved</text>
+
+  <!-- Table Header -->
+  <rect x="35" y="235" width="690" height="30" rx="4" fill="#252545"/>
+  <text x="50" y="255" fill="#999" font-size="11" font-weight="bold">ID</text>
+  <text x="130" y="255" fill="#999" font-size="11" font-weight="bold">TITLE</text>
+  <text x="420" y="255" fill="#999" font-size="11" font-weight="bold">LAYER</text>
+  <text x="520" y="255" fill="#999" font-size="11" font-weight="bold">PRIORITY</text>
+  <text x="620" y="255" fill="#999" font-size="11" font-weight="bold">STATUS</text>
+
+  <!-- Task Row 1 -->
+  <rect x="35" y="268" width="690" height="35" rx="0" fill="#1a1a32" opacity="0.5"/>
+  <text x="50" y="290" fill="#aaa" font-size="12">TASK-001</text>
+  <text x="130" y="290" fill="#ddd" font-size="12">User Entity 정의</text>
+  <rect x="420" y="278" width="60" height="20" rx="4" fill="#2a1a3a"/>
+  <text x="430" y="292" fill="#a78bfa" font-size="10">entity</text>
+  <rect x="520" y="278" width="45" height="20" rx="4" fill="#3a1a1a"/>
+  <text x="528" y="292" fill="#ef4444" font-size="10">high</text>
+  <rect x="620" y="278" width="70" height="20" rx="4" fill="#1b3a1b"/>
+  <text x="628" y="292" fill="#2ecc71" font-size="10">✅ resolved</text>
+
+  <!-- Task Row 2 -->
+  <rect x="35" y="305" width="690" height="35" rx="0" fill="transparent"/>
+  <text x="50" y="327" fill="#aaa" font-size="12">TASK-002</text>
+  <text x="130" y="327" fill="#ddd" font-size="12">UserRepository CRUD</text>
+  <rect x="420" y="315" width="80" height="20" rx="4" fill="#1a2a3a"/>
+  <text x="428" y="329" fill="#60a5fa" font-size="10">repository</text>
+  <rect x="520" y="315" width="45" height="20" rx="4" fill="#3a1a1a"/>
+  <text x="528" y="329" fill="#ef4444" font-size="10">high</text>
+  <rect x="620" y="315" width="70" height="20" rx="4" fill="#1b3a1b"/>
+  <text x="628" y="329" fill="#2ecc71" font-size="10">✅ resolved</text>
+
+  <!-- Task Row 3 -->
+  <rect x="35" y="342" width="690" height="35" rx="0" fill="#1a1a32" opacity="0.5"/>
+  <text x="50" y="364" fill="#aaa" font-size="12">TASK-003</text>
+  <text x="130" y="364" fill="#ddd" font-size="12">UserService 비즈니스 로직</text>
+  <rect x="420" y="352" width="60" height="20" rx="4" fill="#1a3a2a"/>
+  <text x="428" y="366" fill="#34d399" font-size="10">service</text>
+  <rect x="520" y="352" width="55" height="20" rx="4" fill="#3a3a1a"/>
+  <text x="528" y="366" fill="#fbbf24" font-size="10">medium</text>
+  <rect x="620" y="352" width="70" height="20" rx="4" fill="#1b3a1b"/>
+  <text x="628" y="366" fill="#2ecc71" font-size="10">✅ resolved</text>
+
+  <!-- Task Row 4 -->
+  <rect x="35" y="379" width="690" height="35" rx="0" fill="transparent"/>
+  <text x="50" y="401" fill="#aaa" font-size="12">TASK-004</text>
+  <text x="130" y="401" fill="#ddd" font-size="12">UserController REST API</text>
+  <rect x="420" y="389" width="72" height="20" rx="4" fill="#3a2a1a"/>
+  <text x="428" y="403" fill="#fb923c" font-size="10">controller</text>
+  <rect x="520" y="389" width="55" height="20" rx="4" fill="#3a3a1a"/>
+  <text x="528" y="403" fill="#fbbf24" font-size="10">medium</text>
+  <rect x="620" y="389" width="78" height="20" rx="4" fill="#3a2a1a"/>
+  <text x="628" y="403" fill="#f39c12" font-size="10">⏳ in_progress</text>
+
+  <!-- Task Row 5 -->
+  <rect x="35" y="416" width="690" height="35" rx="0" fill="#1a1a32" opacity="0.5"/>
+  <text x="50" y="438" fill="#aaa" font-size="12">TASK-005</text>
+  <text x="130" y="438" fill="#ddd" font-size="12">UserController 테스트</text>
+  <rect x="420" y="426" width="42" height="20" rx="4" fill="#1a1a3a"/>
+  <text x="428" y="440" fill="#818cf8" font-size="10">test</text>
+  <rect x="520" y="426" width="55" height="20" rx="4" fill="#3a3a1a"/>
+  <text x="528" y="440" fill="#fbbf24" font-size="10">medium</text>
+  <rect x="620" y="426" width="50" height="20" rx="4" fill="#1e1e3a"/>
+  <text x="628" y="440" fill="#888" font-size="10">🆕 new</text>
+
+  <!-- Task Row 6 -->
+  <rect x="35" y="453" width="690" height="35" rx="0" fill="transparent"/>
+  <text x="50" y="475" fill="#aaa" font-size="12">TASK-006</text>
+  <text x="130" y="475" fill="#ddd" font-size="12">Application 설정</text>
+  <rect x="420" y="463" width="50" height="20" rx="4" fill="#2a2a1a"/>
+  <text x="428" y="477" fill="#d4d400" font-size="10">config</text>
+  <rect x="520" y="463" width="38" height="20" rx="4" fill="#1a2a1a"/>
+  <text x="528" y="477" fill="#86efac" font-size="10">low</text>
+  <rect x="620" y="463" width="50" height="20" rx="4" fill="#1e1e3a"/>
+  <text x="628" y="477" fill="#888" font-size="10">🆕 new</text>
+
+  <!-- Progress Bar -->
+  <rect x="35" y="505" width="690" height="8" rx="4" fill="#252545"/>
+  <rect x="35" y="505" width="460" height="8" rx="4" fill="#2ecc71"/>
+  <text x="35" y="530" fill="#888" font-size="11">진행률: 67% (4/6 resolved)</text>
+
+  <!-- Dependency Graph Mini -->
+  <rect x="35" y="545" width="690" height="50" rx="8" fill="#1a1a30"/>
+  <text x="50" y="570" fill="#666" font-size="11">의존성: TASK-001 → TASK-002 → TASK-003 → TASK-004 → TASK-005</text>
+  <text x="50" y="585" fill="#666" font-size="11">                                                          TASK-006 (독립)</text>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Section 3: Agent Details (Right)       -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="755" y="190" width="425" height="200" rx="12" fill="url(#card)" stroke="#2a2a4a" stroke-width="1"/>
+  <text x="775" y="220" fill="#e0e0ff" font-size="16" font-weight="bold">⚙️ Agent 설정</text>
+
+  <!-- Agent cards -->
+  <g transform="translate(775, 235)">
+    <rect x="0" y="0" width="185" height="65" rx="6" fill="#1a1a30" stroke="#2a2a4a"/>
+    <text x="10" y="20" fill="#ccc" font-size="12" font-weight="bold">Agent 1 — 요구사항</text>
+    <text x="10" y="37" fill="#888" font-size="10">모델: gpt-4o</text>
+    <text x="10" y="52" fill="#888" font-size="10">재시도: 3 | 타임아웃: 10m</text>
+
+    <rect x="200" y="0" width="185" height="65" rx="6" fill="#1a1a30" stroke="#2a2a4a"/>
+    <text x="210" y="20" fill="#ccc" font-size="12" font-weight="bold">Agent 2 — 작업분해</text>
+    <text x="210" y="37" fill="#888" font-size="10">모델: gpt-4o</text>
+    <text x="210" y="52" fill="#888" font-size="10">재시도: 3 | 타임아웃: 10m</text>
+
+    <rect x="0" y="75" width="185" height="65" rx="6" fill="#1a1a30" stroke="#3a2a1a"/>
+    <text x="10" y="95" fill="#f39c12" font-size="12" font-weight="bold">Agent 3 — 코드구현 ⏳</text>
+    <text x="10" y="112" fill="#888" font-size="10">모델: gpt-4o-mini</text>
+    <text x="10" y="127" fill="#888" font-size="10">재시도: 3 | 타임아웃: 10m</text>
+
+    <rect x="200" y="75" width="185" height="65" rx="6" fill="#1a1a30" stroke="#2a2a4a"/>
+    <text x="210" y="95" fill="#888" font-size="12" font-weight="bold">Agent 4 — QA검증</text>
+    <text x="210" y="112" fill="#888" font-size="10">모델: gpt-4o-mini</text>
+    <text x="210" y="127" fill="#888" font-size="10">재시도: 3 | 타임아웃: 10m</text>
+  </g>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Section 4: Error Log (Right Bottom)    -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="755" y="405" width="425" height="205" rx="12" fill="url(#card)" stroke="#2a2a4a" stroke-width="1"/>
+  <text x="775" y="435" fill="#e0e0ff" font-size="16" font-weight="bold">📜 실행 로그</text>
+
+  <g transform="translate(775, 450)">
+    <text x="0" y="15" fill="#2ecc71" font-size="11" font-family="monospace">13:02:22 [agent1] INFO  요구사항 구체화 시작</text>
+    <text x="0" y="33" fill="#2ecc71" font-size="11" font-family="monospace">13:02:35 [agent1] INFO  요구사항 구체화 완료</text>
+    <text x="0" y="51" fill="#2ecc71" font-size="11" font-family="monospace">13:02:36 [agent2] INFO  작업 목록 생성 시작</text>
+    <text x="0" y="69" fill="#2ecc71" font-size="11" font-family="monospace">13:03:01 [agent2] INFO  작업 목록 생성 완료</text>
+    <text x="0" y="87" fill="#f39c12" font-size="11" font-family="monospace">13:03:02 [agent3] INFO  코드 구현 시작</text>
+    <text x="0" y="105" fill="#f39c12" font-size="11" font-family="monospace">13:03:15 [agent3] INFO  LLM 호출 #1 (gpt-4o-mini)</text>
+    <text x="0" y="123" fill="#f39c12" font-size="11" font-family="monospace">13:04:30 [agent3] INFO  LLM 호출 #2 (gpt-4o-mini)</text>
+    <text x="0" y="141" fill="#ef4444" font-size="11" font-family="monospace">13:05:18 [agent3] ERROR ./gradlew not found</text>
+  </g>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Section 5: Bottom Stats Bar            -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="20" y="625" width="1160" height="80" rx="12" fill="url(#card)" stroke="#2a2a4a" stroke-width="1"/>
+
+  <!-- Stat cards -->
+  <g transform="translate(50, 645)">
+    <text x="0" y="15" fill="#888" font-size="11">총 LLM 호출</text>
+    <text x="0" y="40" fill="#e0e0ff" font-size="24" font-weight="bold">16</text>
+
+    <text x="180" y="15" fill="#888" font-size="11">생성된 파일</text>
+    <text x="180" y="40" fill="#e0e0ff" font-size="24" font-weight="bold">5</text>
+
+    <text x="340" y="15" fill="#888" font-size="11">총 코드 크기</text>
+    <text x="340" y="40" fill="#e0e0ff" font-size="24" font-weight="bold">2.7 KB</text>
+
+    <text x="530" y="15" fill="#888" font-size="11">소요 시간</text>
+    <text x="530" y="40" fill="#e0e0ff" font-size="24" font-weight="bold">2m 58s</text>
+
+    <text x="710" y="15" fill="#888" font-size="11">Retry 횟수</text>
+    <text x="710" y="40" fill="#e0e0ff" font-size="24" font-weight="bold">0</text>
+
+    <text x="870" y="15" fill="#888" font-size="11">알림 채널</text>
+    <text x="870" y="40" fill="#7289da" font-size="24" font-weight="bold">Discord</text>
+  </g>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Section 6: Recent Runs History         -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="20" y="720" width="1160" height="160" rx="12" fill="url(#card)" stroke="#2a2a4a" stroke-width="1"/>
+  <text x="40" y="750" fill="#e0e0ff" font-size="16" font-weight="bold">📊 실행 히스토리</text>
+
+  <!-- Run history bars -->
+  <g transform="translate(40, 770)">
+    <rect x="0" y="0" width="1120" height="30" rx="4" fill="#1a1a30"/>
+    <text x="10" y="20" fill="#aaa" font-size="11">#5 · 오늘 13:02</text>
+    <rect x="200" y="5" width="80" height="20" rx="4" fill="#3a1a1a"/>
+    <text x="212" y="20" fill="#ef4444" font-size="10">❌ FAILED</text>
+    <text x="300" y="20" fill="#888" font-size="11">agent3: ./gradlew not found</text>
+    <text x="900" y="20" fill="#666" font-size="11">2m 58s · 16 LLM calls</text>
+
+    <rect x="0" y="35" width="1120" height="30" rx="4" fill="transparent"/>
+    <text x="10" y="55" fill="#aaa" font-size="11">#4 · 오늘 13:05</text>
+    <rect x="200" y="40" width="80" height="20" rx="4" fill="#1b3a1b"/>
+    <text x="212" y="55" fill="#2ecc71" font-size="10">✅ SUCCESS</text>
+    <text x="300" y="55" fill="#888" font-size="11">calculator — 전체 파이프라인 완료</text>
+    <text x="900" y="55" fill="#666" font-size="11">3m 12s · 16 LLM calls</text>
+
+    <rect x="0" y="70" width="1120" height="30" rx="4" fill="#1a1a30"/>
+    <text x="10" y="90" fill="#aaa" font-size="11">#3 · 어제 22:15</text>
+    <rect x="200" y="75" width="80" height="20" rx="4" fill="#1b3a1b"/>
+    <text x="212" y="90" fill="#2ecc71" font-size="10">✅ SUCCESS</text>
+    <text x="300" y="90" fill="#888" font-size="11">todo-api — 전체 파이프라인 완료</text>
+    <text x="900" y="90" fill="#666" font-size="11">4m 05s · 20 LLM calls</text>
+  </g>
+</svg>
