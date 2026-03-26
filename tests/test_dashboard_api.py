@@ -104,6 +104,54 @@ async def test_history_empty(client, setup_dirs):
 
 
 @pytest.mark.asyncio
+async def test_pipeline_run(client, setup_dirs):
+    res = await client.post("/api/pipeline/run", json={"input_text": "테스트 요구사항"})
+    assert res.status_code == 200
+    data = res.json()
+    assert data["status"] == "started"
+    assert "시작" in data["message"]
+
+
+@pytest.mark.asyncio
+async def test_pipeline_status(client, setup_dirs):
+    res = await client.get("/api/pipeline/status")
+    assert res.status_code == 200
+    data = res.json()
+    assert "is_running" in data
+
+
+@pytest.mark.asyncio
+async def test_pipeline_cancel_no_task(client, setup_dirs):
+    # Reset state
+    app.state.running_task = None
+    res = await client.post("/api/pipeline/cancel")
+    assert res.status_code == 200
+    assert res.json()["status"] == "error"
+
+
+@pytest.mark.asyncio
+async def test_pipeline_duplicate_run(client, setup_dirs):
+    import asyncio
+
+    # Start a long-running fake task
+    async def slow():
+        await asyncio.sleep(60)
+
+    app.state.running_task = asyncio.create_task(slow())
+    try:
+        res = await client.post("/api/pipeline/run", json={"input_text": "중복 실행"})
+        assert res.status_code == 200
+        assert res.json()["status"] == "error"
+    finally:
+        app.state.running_task.cancel()
+        try:
+            await app.state.running_task
+        except asyncio.CancelledError:
+            pass
+        app.state.running_task = None
+
+
+@pytest.mark.asyncio
 async def test_history_with_files(client, setup_dirs):
     _, _, logs_dir = setup_dirs
     for i in range(3):

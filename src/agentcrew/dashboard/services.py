@@ -1,8 +1,10 @@
-"""파일 읽기 로직 — progress, tasks, config, logs, history."""
+"""파일 읽기 로직 — progress, tasks, config, logs, history, pipeline trigger."""
 
 from __future__ import annotations
 
+import asyncio
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -87,3 +89,49 @@ def get_history() -> list[dict[str, Any]]:
             "log_file": f.name,
         })
     return entries
+
+
+# ---------------------------------------------------------------------------
+# Pipeline trigger
+# ---------------------------------------------------------------------------
+
+logger = logging.getLogger(__name__)
+
+
+class StubLLMProvider:
+    """대시보드 트리거용 스텁 LLM. TODO: config에서 실제 provider 생성."""
+
+    async def generate(self, prompt: str, **kwargs: Any) -> str:
+        return f"[STUB] LLM response for: {prompt[:50]}..."
+
+
+async def run_pipeline(input_text: str, **kwargs: Any) -> None:
+    """PRMOrchestrator를 생성하여 파이프라인을 실행한다.
+
+    실행 중 상태는 progress.json에 자동 기록된다 (기존 ProgressMonitor).
+    성공/실패 모두 로그를 저장한다.
+    """
+    from agentcrew.prm.progress_monitor import ProgressMonitor
+
+    monitor = ProgressMonitor(BASE_DIR / "progress.json")
+    try:
+        logger.info("Pipeline started with input: %s", input_text[:80])
+        monitor.update(pipeline_status="running", current_agent="orchestrator")
+
+        # TODO: PRMOrchestrator를 실제로 생성하여 실행
+        # llm = StubLLMProvider()
+        # orchestrator = PRMOrchestrator(llm_provider=llm, ...)
+        # await orchestrator.run(input_text, **kwargs)
+
+        # Placeholder: 스텁 실행
+        await asyncio.sleep(1)
+
+        monitor.update(pipeline_status="completed", current_agent=None)
+        logger.info("Pipeline completed successfully")
+    except asyncio.CancelledError:
+        monitor.update(pipeline_status="cancelled", current_agent=None)
+        logger.warning("Pipeline was cancelled")
+        raise
+    except Exception as exc:
+        monitor.update(pipeline_status="failed", current_agent=None, error=str(exc))
+        logger.error("Pipeline failed: %s", exc)
